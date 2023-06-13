@@ -84,6 +84,8 @@ void setup() {
   Serial.begin(SERIAL_BAUD);
 
   wifi_connect();
+  Serial.println("IP Adress: ");
+  Serial.println(WiFi.localIP());
 
   server.on("/", handleRoot);
   server.on("/drink1", fillWithDrink1);
