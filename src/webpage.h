@@ -30,10 +30,10 @@ char webpage[] PROGMEM = R"=====(
         
 
         function submitValues() {
-          let drink1 = parseInt(document.getElementById('percentage-range1').value);
-          let drink2 = parseInt(document.getElementById('percentage-range2').value);
-          let drink3 = parseInt(document.getElementById('percentage-range3').value);
-          let result = drink1 + drink2 + drink3  
+          let drink1 = document.getElementById('percentage-range1').value;
+          let drink2 = document.getElementById('percentage-range2').value;
+          let drink3 = document.getElementById('percentage-range3').value;
+          let result = parseInt(drink1) + parseInt(drink2) + parseInt(drink3);
 
           result==100 
             ? mixValues(drink1,drink2,drink3)
@@ -44,7 +44,7 @@ char webpage[] PROGMEM = R"=====(
         }
 
         function mixValues(drink1,drink2,drink3){
-          fetch(`/drink1/${drink1}/drink2/${drink2}/drink3/${drink3}`)
+          fetch(`/drink?drink1p=${drink1}&drink2p=${drink2}&drink3p=${drink3}`)
           .then(response=>{
               if (response.ok) {
                 return response.text();

@@ -15,7 +15,7 @@
 
 #define PIN_1 14
 #define PIN_2 33
-#define PIN_3 34
+#define PIN_3 13
 
 WebServer server;
 WebSocketsServer webSocket = WebSocketsServer(81);
@@ -24,12 +24,16 @@ WebSocketsServer webSocket = WebSocketsServer(81);
  *  Private functions
  */
 
-void activatePin(int pin, int percentage) {
-  if (percentage == 0) {
-    digitalWrite(pin, HIGH);
-  delay(10000*percentage/100);  // Multiplica por 10 para ajustar el rango de porcentaje a milisegundos
-  digitalWrite(pin, LOW);
-  }
+void activatePin(int pin1,int pin2,int pint3, int percentage1, int percentage2, int percentage3) {
+  digitalWrite(PIN_1, HIGH);
+  delay(10000 * percentage1 / 100);
+  digitalWrite(PIN_1, LOW);
+  digitalWrite(PIN_2, HIGH);
+  delay(10000 * percentage2 / 100);
+  digitalWrite(PIN_2, LOW);
+  digitalWrite(PIN_3, HIGH);
+  delay(10000 * percentage3 / 100);
+  digitalWrite(PIN_3, LOW);
 }
 
 void handleRoot() {
@@ -63,23 +67,25 @@ void fillWithDrink3() {
 }
 
 void handleDrinkPercentages(){
-  int drink1Percentage = server.pathArg(0).toInt();
-  int drink2Percentage = server.pathArg(2).toInt();
-  int drink3Percentage = server.pathArg(4).toInt();
+  if (server.hasArg("drink1p") && server.hasArg("drink2p") && server.hasArg("drink3p")) {
+    int drink1Percentage = server.arg("drink1p").toInt();
+    int drink2Percentage = server.arg("drink2p").toInt();
+    int drink3Percentage = server.arg("drink3p").toInt(); 
 
   Serial.print("Drink 1: ");
   Serial.println(drink1Percentage);
-  activatePin(PIN_1, drink1Percentage);
 
   Serial.print("Drink 2: ");
   Serial.println(drink2Percentage);
-  activatePin(PIN_2, drink2Percentage);
 
   Serial.print("Drink 3: ");
   Serial.println(drink3Percentage);
-  activatePin(PIN_3, drink3Percentage);
-
-  server.send(200, "text/plain", "Drink percentages received");
+   
+  activatePin(PIN_1, PIN_2, PIN_3, drink1Percentage, drink2Percentage, drink3Percentage);
+  server.send(200, "text/plain", "Drink percentages received");}
+  else {
+    server.send(400, "text/plain", "Drink percentages not received");
+  }
 }
 
 void setup() {
@@ -88,7 +94,7 @@ void setup() {
   pinMode(PIN_1, OUTPUT);
   pinMode(PIN_2, OUTPUT);
   pinMode(PIN_3, OUTPUT);
-  
+
   wifi_connect();
   Serial.println("IP Adress: ");
   Serial.println(WiFi.localIP());
@@ -97,7 +103,7 @@ void setup() {
   server.on("/drink1", fillWithDrink1);
   server.on("/drink2", fillWithDrink2);
   server.on("/drink3", fillWithDrink3);
-  server.on("/drink1/<int:drink1>/drink2/<int:drink2>/drink3/<int:drink3>", handleDrinkPercentages);
+  server.on("/drink", handleDrinkPercentages);
 
   server.begin();
 }
