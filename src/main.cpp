@@ -25,9 +25,11 @@ WebSocketsServer webSocket = WebSocketsServer(81);
  */
 
 void activatePin(int pin, int percentage) {
-  digitalWrite(pin, HIGH);
+  if (percentage == 0) {
+    digitalWrite(pin, HIGH);
   delay(10000*percentage/100);  // Multiplica por 10 para ajustar el rango de porcentaje a milisegundos
   digitalWrite(pin, LOW);
+  }
 }
 
 void handleRoot() {
@@ -83,6 +85,10 @@ void handleDrinkPercentages(){
 void setup() {
   Serial.begin(SERIAL_BAUD);
 
+  pinMode(PIN_1, OUTPUT);
+  pinMode(PIN_2, OUTPUT);
+  pinMode(PIN_3, OUTPUT);
+  
   wifi_connect();
   Serial.println("IP Adress: ");
   Serial.println(WiFi.localIP());

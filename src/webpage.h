@@ -44,7 +44,7 @@ char webpage[] PROGMEM = R"=====(
         }
 
         function mixValues(drink1,drink2,drink3){
-          fetch(`/drink/${drink1}/drink2/${drink2}/drink3/${drink3}`)
+          fetch(`/drink1/${drink1}/drink2/${drink2}/drink3/${drink3}`)
           .then(response=>{
               if (response.ok) {
                 return response.text();
