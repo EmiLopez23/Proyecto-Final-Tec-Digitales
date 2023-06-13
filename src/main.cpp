@@ -14,8 +14,8 @@
 #include "webpage.h"
 
 #define PIN_1 14
-#define PIN_2 15
-#define PIN_3 16
+#define PIN_2 33
+#define PIN_3 34
 
 WebServer server;
 WebSocketsServer webSocket = WebSocketsServer(81);
